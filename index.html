@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Odin Project: Library Project</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="main_container">
+        <div id="header">
+            <h1>Welcome to My Library</h1>
+        </div>
+        <div id="add_form">
+            <div id="add_text">Add a new book:</div>
+            <div id="add_title">
+                <label for="title">Title:</label><input type="text" id="title" name="title" minlength="3" required>
+            </div>
+            <div id="add_author">
+                <label for="author">Author:</label><input type="text" id="author" name="author" minlength="3" required>
+            </div>
+            <div id="add_pages">
+                <label for="pages">Pages:</label><input type="number" id="pages" name="pages" min="3" required>
+            </div>
+            <div id="add_read">
+                <label for="read"></label>Read?
+                <select id="read" name="read" required>
+                    <option value="Read">I have read it</option>
+                    <option value="Not yet read">I haven't read it yet</option>
+                </select>
+            </div>
+            <div id="add_button">
+                <button id="add_book" type="submit">Add new book</button>
+            </div>
+        </div>
+        <div id="card_container"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+
+</html>
