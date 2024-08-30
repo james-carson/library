@@ -21,14 +21,23 @@ function addBookToLibrary(title, author, pages, read) {
     myLibrary.push(book)
 }
 
-// TODO: Update this function so that it actually adds the new book. EITHER make a new function (or modify) that adds it individually, or clear all books here and then add all again.
+function clearBooks() {
+    const container = document.getElementById('card_container');
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}
 
 function displayBooks() {
+
+    clearBooks();
+
     for (let i = 0; i < myLibrary.length; i++) {
         const books = myLibrary[i];
 
         const card = document.createElement('div');
         card.classList.add('card');
+        card.setAttribute('data-index', i);
         document.getElementById('card_container').appendChild(card);
 
         const titleDiv = document.createElement('div');
@@ -51,6 +60,65 @@ function displayBooks() {
         readDiv.textContent = `Read? ${books.read}`;
         card.appendChild(readDiv);
 
+        const buttonDiv = document.createElement('div');
+        buttonDiv.classList.add('buttonDiv');
+        card.appendChild(buttonDiv);
+
+        const removeButton = document.createElement('button');
+        removeButton.classList.add('removeButton');
+        removeButton.textContent = 'Remove';
+        removeButton.setAttribute('data-index', i);
+        buttonDiv.appendChild(removeButton);
+
+        const toggleRead = document.createElement('button');
+        toggleRead.classList.add('toggleRead');
+        toggleRead.textContent = 'Read / Not Read';
+        removeButton.setAttribute('data-index', i);
+        buttonDiv.appendChild(toggleRead);
+    }
+
+    attachEventListeners();
+
+}
+
+// End of display books function!!!
+
+// Need a create event listeners functions
+
+function attachEventListeners() {
+
+    const removeButtons = document.getElementsByClassName('removeButton');
+    const toggleButtons = document.getElementsByClassName('toggleRead');
+
+    for (let i = 0; i < removeButtons.length; i++) {
+        removeButtons[i].setAttribute('data-index', i);
+        removeButtons[i].addEventListener("click", function (event) {
+            const index = event.target.getAttribute('data-index');
+            myLibrary.splice(index, 1);
+            console.log('Book removed at index:', index);
+            clearBooks();
+            displayBooks();
+        });
+    }
+
+    for (let i = 0; i < toggleButtons.length; i++) {
+        toggleButtons[i].setAttribute('data-index', i);
+        toggleButtons[i].addEventListener("click", function (event) {
+            const index = event.target.getAttribute('data-index');
+            const book = myLibrary[index];
+            const currentStatus = book.read;
+
+            if (currentStatus === 'Read') {
+                book.read = "Not yet read";
+            } else if (currentStatus === 'Not yet read') {
+                book.read = "Read";
+            } else {
+                alert("Error in Read status")
+            }
+
+            clearBooks();
+            displayBooks();
+        })
     }
 }
 
@@ -58,23 +126,45 @@ document.addEventListener('DOMContentLoaded', (event) => {
     displayBooks();
 });
 
-function validateInput() {
+function addNewBook() {
     const titleInput = document.getElementById('title');
     const authorInput = document.getElementById('author');
     const pagesInput = document.getElementById('pages');
     const readInput = document.getElementById('read');
 
-    const title = titleInput.value;
-    const author = authorInput.value;
-    const pages = pagesInput.value;
+    const title = titleInput.value.trim();
+    const author = authorInput.value.trim();
+    const pages = parseInt(pagesInput.value.trim(), 10);
     const read = readInput.value;
+
+    if (title.length < 3) {
+        alert('The title must be at least 3 characters long.');
+        return;
+    }
+
+    if (author.length < 3) {
+        alert('The author\'\s name must be at least 3 characters long.');
+        return;
+    }
+
+    if (isNaN(pages) || pages < 3) {
+        alert('Please enter a number greater than or equal to 3.');
+        return;
+    }
+
+    if (!read) {
+        alert('Please select if you have already read the book or not.');
+        return;
+    }
 
     console.log('Title:', title);
     console.log('Author:', author);
     console.log('Pages:', pages);
     console.log('Read:', read);
 
+    clearBooks();
     addBookToLibrary(title, author, parseInt(pages), read);
+    displayBooks();
 
     document.getElementById('title').value = '';
     document.getElementById('author').value = '';
@@ -82,4 +172,4 @@ function validateInput() {
     document.getElementById('read').value = 'Read';
 }
 
-document.getElementById('add_book').addEventListener("click", validateInput);
+document.getElementById('add_book').addEventListener("click", addNewBook);
